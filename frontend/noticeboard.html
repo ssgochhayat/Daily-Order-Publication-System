@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notice Board</title>
+  <link rel="stylesheet" href="noticeboard.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <aside class="aside-menu" id="aside-menu">
+      <ul>
+        <li><a href="/noticeboard.html" id="dashboard">Notices</a></li>
+        <li><a href="#" id="admin-panel">Admin-section</a></li>
+        <li><a href="#" id="feedback">Feedback</a></li>
+        <li><a href="#" id="aside-logout">Logout</a></li>
+      </ul>
+    </aside>
+    <nav class="navbar" id="navbar">
+      <div class="logo">
+        <img src="DO2.jpg" alt="Logo" />
+      </div>
+      <ul class="nav-links">
+        <li id="back"><a href="/"><i class="ri-arrow-go-back-line"></i> Back to Home</a></li>
+      </ul>
+      <button id="logout">Logout</button>
+    </nav>
+    <div class="main">
+      <div class="admin-section" id="admin-section">
+        <div class="box">
+          <div class="notice-head">
+            <h2>Notice Board</h2>
+            <button id="add-notice" class="add-button"><i class="ri-add-line"></i> Add Notice</button>
+            <input type="file" id="file-input" style="display: none" />
+          </div>
+          <ul class="notices" id="notices">
+            <!-- Notice items will be dynamically added here -->
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div id="file-preview-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <embed id="file-preview" src="" type="application/pdf" width="100%" height="600px" />
+      </div>
+    </div>
+  </div>
+
+  <script src="noticescript.js"></script>
+  <script>
+    // Function to handle logout
+    document.getElementById('logout').addEventListener('click', function() {
+      alert('User logged out.');
+      // Add actual logout logic here
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notice Board</title>
+  <link rel="stylesheet" href="noticeboard.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <aside class="aside-menu" id="aside-menu">
+      <ul>
+        <li><a href="/noticeboard.html" id="dashboard">Notices</a></li>
+        <li><a href="#" id="admin-panel">Admin-section</a></li>
+        <li><a href="#" id="feedback">Feedback</a></li>
+        <li><a href="#" id="aside-logout">Logout</a></li>
+      </ul>
+    </aside>
+    <nav class="navbar" id="navbar">
+      <div class="logo">
+        <img src="DO2.jpg" alt="Logo" />
+      </div>
+      <ul class="nav-links">
+        <li id="back"><a href="/"><i class="ri-arrow-go-back-line"></i> Back to Home</a></li>
+      </ul>
+      <!-- <button id="logout">Logout</button> -->
+    </nav>
+    <div class="main">
+      <div class="admin-section" id="admin-section">
+        <div class="box">
+          <div class="notice-head">
+            <h2></h2>
+            <input type="file" id="file-input" style="display: none" />
+          </div>
+          <ul class="notices" id="notices">
+            <!-- Notice items will be dynamically added here -->
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div id="file-preview-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <embed id="file-preview" src="" type="application/pdf" width="100%" height="600px" />
+      </div>
+    </div>
+  </div>
+  <script>
+    const noticesList = document.getElementById('notices');
+
+    // Function to fetch all notices from local storage and display them
+    function displayNoticesFromStorage() {
+      // Clear existing notices from the list
+      noticesList.innerHTML = '';
+
+      // Loop through local storage items
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('file_')) {
+          const fileData = JSON.parse(localStorage.getItem(key));
+          const fileName = fileData.name;
+
+          // Create list item for each notice
+          const listItem = document.createElement('li');
+          const fileNameSpan = document.createElement('span');
+          fileNameSpan.textContent = fileName;
+
+          // Preview button
+          const previewButton = createButton('Preview', function () {
+            previewFileFromStorage(fileName);
+          });
+
+          // Download button
+          const downloadButton = createButton('Download', function () {
+            downloadFileFromStorage(fileName);
+          });
+
+          // Append elements to the list item
+          listItem.appendChild(fileNameSpan);
+          listItem.appendChild(previewButton);
+          listItem.appendChild(downloadButton);
+          noticesList.appendChild(listItem);
+        }
+      }
+    }
+
+    // Function to create a button with text content and click handler
+    function createButton(text, clickHandler) {
+      const button = document.createElement('button');
+      button.textContent = text;
+      button.addEventListener('click', clickHandler);
+      return button;
+    }
+
+    // Function to preview the file (PDF) from local storage
+    function previewFileFromStorage(fileName) {
+      const fileData = JSON.parse(localStorage.getItem('file_' + fileName));
+      if (fileData) {
+        const file = new File([fileName], fileName, { type: fileData.type });
+        previewFile(file);
+      }
+    }
+
+    // Function to download the file from local storage
+    function downloadFileFromStorage(fileName) {
+      const fileData = JSON.parse(localStorage.getItem('file_' + fileName));
+      if (fileData) {
+        const file = new File([fileName], fileName, { type: fileData.type });
+        downloadFile(file);
+      }
+    }
+
+    // Function to preview the file (PDF)
+    function previewFile(file) {
+      const fileURL = URL.createObjectURL(file);
+      document.getElementById('file-preview').src = fileURL;
+      document.getElementById('file-preview-modal').style.display = 'block';
+    }
+
+    // Function to download the file
+    function downloadFile(file) {
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(file);
+      downloadLink.download = file.name;
+      downloadLink.click();
+    }
+
+    // Modal close button functionality
+    const modal = document.getElementById('file-preview-modal');
+    const closeBtn = document.getElementsByClassName('close')[0];
+
+    closeBtn.onclick = function () {
+      modal.style.display = 'none';
+      document.getElementById('file-preview').src = '';
+    };
+
+    window.onclick = function (event) {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+        document.getElementById('file-preview').src = '';
+      }
+    };
+
+    // Initialize by displaying notices from local storage on page load
+    displayNoticesFromStorage();
+  </script>
+</body>
+
+</html>
